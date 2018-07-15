@@ -76,13 +76,7 @@ def crop_roi(input_path: str, output_path: str) -> None:
 
 
 
-if __name__ == '__main__':
-    from ustoolbox.utils.logs import set_logger
 
-    set_logger(1)
-    input_dir = '../../data/raw/test_crop_input'
-    output_dir = '../../data/raw/test_crop_output'
-    crop_roi(input_dir, output_dir)
 
 
 
