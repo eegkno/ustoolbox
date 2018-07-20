@@ -1,0 +1,45 @@
+<PlusConfiguration version="2.1">
+
+  <DataCollection StartupDelaySec="1.0">
+    
+    <DeviceSet 
+      Name="Test_01: Video streaming using Dazzle DVD Recorder"
+      Description=" Test the video streaming from the US using the Dazzle
+
+	  Sources: 
+      https://www.pinnaclesys.com/en/products/dazzle/dvd-recorder-hd/
+      http://perk-software.cs.queensu.ca/plus/doc/nightly/user/DeviceMicrosoftMediaFoundation.html"
+    />
+	
+	<!--BEGIN: Section of the grabber-->
+	<Device
+      Id="VideoDevice" 
+      Type="MmfVideo" 
+      FrameSize="640x480" 
+      VideoFormat="YUY2"
+      CaptureDeviceId="0" >
+      <DataSources>
+        <DataSource Type="Video" Id="Video" PortUsImageOrientation="MF" BufferSize="100" AveragedItemsForFiltering="20" />
+      </DataSources>      
+      <OutputChannels>
+        <OutputChannel Id="VideoStream" VideoDataSourceId="Video" />
+      </OutputChannels>
+    </Device>
+	
+    <Device
+      Id="CaptureDevice"
+      Type="VirtualDiscCapture"
+      BaseFilename="RecordingTest.mha"
+      EnableCapturing="FALSE" >
+      <InputChannels>
+        <InputChannel Id="VideoStream" />
+      </InputChannels>
+    </Device>
+	<!--END: Section of the grabber-->
+  
+  </DataCollection>
+
+  <CoordinateDefinitions>
+  </CoordinateDefinitions>
+  
+</PlusConfiguration>
