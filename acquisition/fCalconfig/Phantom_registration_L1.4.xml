@@ -2,64 +2,57 @@
 
   <DataCollection StartupDelaySec="1.0">
     <DeviceSet 
-      Name="Test_03: Video streaming + phantom"
-      Description=" Test the video streaming from the US using the Dazzle and the
-	  visualization of the Lego phantom.
-
-	  Sources: 
-      https://www.pinnaclesys.com/en/products/dazzle/dvd-recorder-hd/
-      http://perk-software.cs.queensu.ca/plus/doc/nightly/user/DeviceMicrosoftMediaFoundation.html"
-    />
-	
-	<!--BEGIN: Section of the grabber-->
+      Name="Phantom_Reg_L1.4:Phantom registration" 
+      Description="No Video with Aurora tracker in Record lego phantom landmarks mode vtkPhantomRegistrationTest uses this configuration" />
+		
+	<!--BEGIN: Section of the tracker-->	
 	<Device
-      Id="VideoDevice" 
-      Type="MmfVideo" 
-      FrameSize="640x480" 
-      VideoFormat="YUY2"
-      CaptureDeviceId="0" >
+      Id="TrackerDevice" 
+      Type="AuroraTracker"
+      SerialPort="3"
+      BaudRate="115200"
+      AcquisitionRate="50"
+      LocalTimeOffsetSec="0.0"
+      ToolReferenceFrame="Tracker" >
       <DataSources>
-        <DataSource Type="Video" Id="Video" PortUsImageOrientation="MF" BufferSize="100" AveragedItemsForFiltering="20" />
-      </DataSources>      
+        <DataSource Type="Tool" Id="Reference" PortName="0" />
+        <DataSource Type="Tool" Id="Stylus" PortName="1" />
+      </DataSources>
       <OutputChannels>
-        <OutputChannel Id="VideoStream" VideoDataSourceId="Video" />
+        <OutputChannel Id="TrackerStream">
+          <DataSource Id="Reference" />
+          <DataSource Id="Stylus" />
+        </OutputChannel>
       </OutputChannels>
-    </Device>
+    </Device> 
+	<!--END: Section of the tracker-->	
 	
-    <Device
-      Id="CaptureDevice"
-      Type="VirtualCapture"
-      BaseFilename="RecordingTest.mha"
-      EnableCapturing="FALSE" >
-      <InputChannels>
-        <InputChannel Id="VideoStream" />
-      </InputChannels>
-    </Device>
-	<!--END: Section of the grabber-->
   </DataCollection>
 
+  
+	<!-- These are the data obtained from the stylus calibration -->
   <CoordinateDefinitions>
-    <Transform From="Image" To="Reference"
+    <Transform From="StylusTip" To="Stylus"
       Matrix="
-        1.0 0.0 0.0 0.0
-        0.0 1.0 0.0 0.0
-        0.0 0.0 1.0 0.0        
-        0.0 0.0 0.0 1.0" />
+        0.98966	0	0.143432	28.0647
+        -0.0140929	0.995161	0.0972389	19.0262
+        -0.142738	-0.0982548	0.984871	192.705
+        0	0	0	1"
+       Error="0.27782" Date="072518_170330" />
   </CoordinateDefinitions>
-  
-  
+
   <Rendering WorldCoordinateFrame="Reference">
     <DisplayableObject Type="Model" ObjectCoordinateFrame="StylusTip" Id="StylusModel" File="Stylus_Example.stl" />
     <DisplayableObject Id="PhantomModel" Type="Model" ObjectCoordinateFrame="Phantom"
       Opacity="0.6"
       File="fCal_L1.4.stl"
       ModelToObjectTransform="
-        1 0 0 -35.0
-        0 1 0 -10.0
-        0 0 1 -5.0
+        1 0 0 0
+        0 1 0 0
+        0 0 1 0
         0 0 0 1" />
   </Rendering>
-  
+
   <PhantomDefinition>
     <Description
       Name="fCal-L"
@@ -95,8 +88,7 @@
       </Landmarks>
     </Geometry>
   </PhantomDefinition>
-  
-  <!-- This section is necessary to display the phantom -->
+
   <fCal
     PhantomModelId="PhantomModel"
     TransducerModelId="ProbeModel"
@@ -113,5 +105,20 @@
     MovingChannelId="TrackerStream"
     MovingSourceId="ProbeToTracker"
     DefaultSelectedChannelId="TrackerStream" />
+  
+  <vtkPlusPivotCalibrationAlgo
+    ObjectMarkerCoordinateFrame="Stylus"
+    ReferenceCoordinateFrame="Reference"
+    ObjectPivotPointCoordinateFrame="StylusTip" />
+
+  <vtkPlusPhantomLandmarkRegistrationAlgo
+    PhantomCoordinateFrame="Phantom"
+    ReferenceCoordinateFrame="Reference"
+    StylusTipCoordinateFrame="StylusTip" />
+  
+  <vtkPhantomLinearObjectRegistrationAlgo
+    PhantomCoordinateFrame="Phantom"
+    ReferenceCoordinateFrame="Reference"
+    StylusTipCoordinateFrame="StylusTip" />
 
 </PlusConfiguration>
