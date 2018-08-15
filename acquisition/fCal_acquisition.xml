@@ -1,0 +1,228 @@
+<PlusConfiguration version="2.1" PlusRevision="Plus-2.6.0.d3024ea5 - Win32">
+  <DataCollection StartupDelaySec="1">
+    <DeviceSet Name="fCal_acquisition: Ultrasound + Aurora magnetic tracker" 
+
+      Description="This configuration can be used to acquire images using fCal or to broadcast the images to 3D Slicer." />
+
+    <Device
+      Id="TrackerDevice"
+      Type="AuroraTracker"
+      SerialPort="3"
+      BaudRate="115200"
+      AcquisitionRate="50"
+      LocalTimeOffsetSec="0.0"
+      SequenceFile="TrackerBuffer.mha"
+      UseData="IMAGE_AND_TRANSFORM"
+      UseOriginalTimestamps="TRUE"
+      RepeatEnabled="TRUE"
+      ToolReferenceFrame="Tracker"
+      MeasurementVolumeNumber="0">
+      <DataSources>
+        <DataSource Type="Tool" Id="Reference" PortName="0" BufferSize="150">
+          <CustomProperties>
+            <Manufacturer>
+              NDI-MF2
+            </Manufacturer>
+            <NdiIdentity>
+              01000000
+            </NdiIdentity>
+            <PartNumber>
+              610066   T6d0-S00218
+            </PartNumber>
+            <Revision>
+              000
+            </Revision>
+            <SerialNumber>
+              38910800
+            </SerialNumber>
+          </CustomProperties>
+        </DataSource>
+        <DataSource Type="Tool" Id="Probe" PortName="1" BufferSize="150">
+          <CustomProperties>
+            <Manufacturer>
+              NDI-MF2
+            </Manufacturer>
+            <NdiIdentity>
+              02000000
+            </NdiIdentity>
+            <PartNumber>
+              610016 T6a0-L00016
+            </PartNumber>
+            <Revision>
+              000
+            </Revision>
+            <SerialNumber>
+              38997800
+            </SerialNumber>
+          </CustomProperties>
+        </DataSource>
+      </DataSources>
+      <OutputChannels>
+        <OutputChannel Id="TrackerStream">
+          <DataSource Id="Reference" />
+          <DataSource Id="Probe" />
+        </OutputChannel>
+      </OutputChannels>
+    </Device>
+
+
+    <Device Id="VideoDevice" Type="MmfVideo" FrameSize="640 480" VideoFormat="YUY2" CaptureDeviceId="0">
+      <DataSources>
+        <DataSource Type="Video" Id="Video" PortUsImageOrientation="MF" BufferSize="150" AveragedItemsForFiltering="20" />
+      </DataSources>
+      <OutputChannels>
+        <OutputChannel Id="VideoStream" VideoDataSourceId="Video" />
+      </OutputChannels>
+    </Device>
+    
+    <Device Id="TrackedVideoDevice" Type="VirtualMixer" BaseFilename="RecordingTest.mha" EnableCapturing="FALSE">
+      <InputChannels>
+        <InputChannel Id="TrackerStream" />
+        <InputChannel Id="VideoStream" />
+      </InputChannels>
+      <OutputChannels>
+        <OutputChannel Id="TrackedVideoStream" />
+      </OutputChannels>
+    </Device>
+
+
+  </DataCollection>
+  <CoordinateDefinitions>
+    <Transform From="Image" To="Probe"
+      Matrix="
+        0.107307	-0.0264804	0.125139	-29.933
+        0.129758	-0.00266454	-0.106512	-52.8794
+        0.0205992	0.159016	0.0190543	48.69
+        0	0	0	1"
+       Error="0.550051" Date="080118_140013" />
+    <Transform From="Image" To="TransducerOriginPixel"
+      Matrix="
+        1	0	0	-410
+        0	1	0	5
+        0	0	1	0
+        0	0	0	1"
+       Date="2011.12.06 17:57:00" />
+    <Transform From="Phantom" To="Reference"
+      Matrix="
+        -0.00592357	0.0726392	0.997341	-21.9958
+        0.00859551	0.997325	-0.072587	-23.6748
+        -0.999946	0.00814268	-0.0065321	-4.77698
+        0	0	0	1"
+       Error="0.42547" Date="072618_161335" />
+    <Transform From="TransducerOriginPixel" To="TransducerOrigin"
+      Matrix="
+        0.169644	0	0	0
+        0	0.161219	0	0
+        0	0	0.165432	0
+        0	0	0	1"
+       Date="080118_140013" />
+  </CoordinateDefinitions>
+
+  <Rendering WorldCoordinateFrame="Reference" DisplayedImageOrientation="MFA">
+    <DisplayableObject Type="Model" ObjectCoordinateFrame="TransducerOrigin" Id="ProbeModel" File="Probe_L14-5_38.stl"
+      ModelToObjectTransform="
+        -1	0	0	29.7
+        0	-1	0	1.5
+        0	0	1	-14
+        0	0	0	1" />
+    <DisplayableObject Type="Model" ObjectCoordinateFrame="Reference" Id="Volume" />
+    <DisplayableObject
+      Id="PhantomModel"
+      Type="Model"
+      ObjectCoordinateFrame="Phantom"
+      Opacity="0.6"
+      File="fCal_2.0.stl"
+      ModelToObjectTransform="
+        1	0	0	-35
+        0	1	0	-10
+        0	0	1	-5
+        0	0	0	1" />
+    <DisplayableObject Type="Image" ObjectCoordinateFrame="Image" Id="LiveImage" />
+  </Rendering>
+
+  <Segmentation
+    ApproximateSpacingMmPerPixel="0.16498"
+    MorphologicalOpeningCircleRadiusMm="0.27"
+    MorphologicalOpeningBarSizeMm="2"
+    ClipRectangleOrigin="168 102"
+    ClipRectangleSize="295 254"
+    MaxLinePairDistanceErrorPercent="10"
+    AngleToleranceDegrees="10"
+    MaxAngleDifferenceDegrees="10"
+    MinThetaDegrees="-70"
+    MaxThetaDegrees="70"
+    MaxLineShiftMm="10"
+    ThresholdImagePercent="5"
+    CollinearPointsMaxDistanceFromLineMm="0.6"
+    UseOriginalImageIntensityForDotIntensityScore="0" />
+
+  <PhantomDefinition>
+    <Description Name="fCAL" Type="Double-N" Version="2.0" WiringVersion="2.0" Institution="Queen&apos;s University PerkLab" />
+    <Geometry>
+      <Pattern Type="NWire">
+        <Wire Name="7:G1_g1" EndPointFront="30.0 0.0 20.0" EndPointBack="30.0 40.0 20.0" />
+        <Wire Name="8:L1_h1" EndPointFront="55.0 0.0 20.0" EndPointBack="35.0 40.0 20.0" />
+        <Wire Name="9:M1_m1" EndPointFront="60.0 0.0 20.0" EndPointBack="60.0 40.0 20.0" />
+      </Pattern>
+      <Pattern Type="NWire">
+        <Wire Name="4:G3_g3" EndPointFront="30.0 0.0 10.0" EndPointBack="30.0 40.0 10.0" />
+        <Wire Name="5:H3_l3" EndPointFront="35.0 0.0 10.0" EndPointBack="55.0 40.0 10.0" />
+        <Wire Name="6:M3_m3" EndPointFront="60.0 0.0 10.0" EndPointBack="60.0 40.0 10.0" />
+      </Pattern>
+      <Pattern Type="NWire">
+        <Wire Name="1:H5_h5" EndPointFront="35.0 0.0 0.0" EndPointBack="35.0 40.0 0.0" />
+        <Wire Name="2:L5_i5" EndPointFront="55.0 0.0 0.0" EndPointBack="40.0 40.0 0.0" />
+        <Wire Name="3:M5_m5" EndPointFront="60.0 0.0 0.0" EndPointBack="60.0 40.0 0.0" />
+      </Pattern>
+      <Landmarks>
+        <Landmark Name="#1" Position="104.3 5.0 20.0" />
+        <Landmark Name="#2" Position="104.3 45.0 20.0" />
+        <Landmark Name="#3" Position="104.3 45.0 0.0" />
+        <Landmark Name="#4" Position="104.3 -5.0 0.0" />
+        <Landmark Name="#5" Position="-34.3 45.0 15.0" />
+        <Landmark Name="#6" Position="-34.3 -5.0 20.0" />
+        <Landmark Name="#7" Position="-34.3 -5.0 0.0" />
+        <Landmark Name="#8" Position="-34.3 45.0 0.0" />
+      </Landmarks>
+    </Geometry>
+  </PhantomDefinition>
+
+  <VolumeReconstruction
+    OutputSpacing="0.5 0.5 0.5"
+    ClipRectangleOrigin="213 81"
+    ClipRectangleSize="399 249"
+    Interpolation="LINEAR"
+    Optimization="FULL"
+    CompoundingMode="MEAN"
+    FillHoles="ON" />
+
+  <fCal
+    PhantomModelId="PhantomModel"
+    ReconstructedVolumeId="Volume"
+    TransducerModelId="ProbeModel"
+    ImageDisplayableObjectId="LiveImage"
+    NumberOfCalibrationImagesToAcquire="200"
+    NumberOfValidationImagesToAcquire="100"
+    NumberOfStylusCalibrationPointsToAcquire="200"
+    RecordingIntervalMs="100"
+    MaxTimeSpentWithProcessingMs="70"
+    ImageCoordinateFrame="Image"
+    ProbeCoordinateFrame="Probe"
+    ReferenceCoordinateFrame="Reference"
+    TransducerOriginCoordinateFrame="TransducerOrigin"
+    TransducerOriginPixelCoordinateFrame="TransducerOriginPixel"
+    TemporalCalibrationDurationSec="10"
+    FixedChannelId="VideoStream"
+    FixedSourceId="Video"
+    MovingChannelId="TrackerStream"
+    MovingSourceId="ProbeToTracker"
+    DefaultSelectedChannelId="TrackedVideoStream"
+    FreeHandStartupDelaySec="5" />
+
+  <vtkTemporalCalibrationAlgo ClipRectangleOrigin="182 435" ClipRectangleSize="66 349" SaveIntermediateImages="TRUE" />
+  <vtkPlusProbeCalibrationAlgo ImageCoordinateFrame="Image" ProbeCoordinateFrame="Probe" PhantomCoordinateFrame="Phantom" ReferenceCoordinateFrame="Reference" />
+  <vtkPlusPhantomLandmarkRegistrationAlgo PhantomCoordinateFrame="Phantom" ReferenceCoordinateFrame="Reference" StylusTipCoordinateFrame="StylusTip" />
+  <vtkPhantomLinearObjectRegistrationAlgo PhantomCoordinateFrame="Phantom" ReferenceCoordinateFrame="Reference" StylusTipCoordinateFrame="StylusTip" />
+
+  
+</PlusConfiguration>
