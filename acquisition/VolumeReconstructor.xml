@@ -1,0 +1,36 @@
+<PlusConfiguration version="2.1">
+
+  <CoordinateDefinitions>
+    <Transform From="Image" To="Probe"
+      Matrix="
+        0.107307	-0.0264804	0.125139	-29.933
+        0.129758	-0.00266454	-0.106512	-52.8794
+        0.0205992	0.159016	0.0190543	48.69
+        0	0	0	1"
+       Error="0.550051" Date="080118_140013" />
+    <Transform From="Phantom" To="Reference"
+      Matrix="
+        -0.00592357	0.0726392	0.997341	-21.9958
+        0.00859551	0.997325	-0.072587	-23.6748
+        -0.999946	0.00814268	-0.0065321	-4.77698
+        0	0	0	1"
+       Error="0.42547" Date="072618_161335" />
+  </CoordinateDefinitions>
+
+  <VolumeReconstruction 
+    OutputSpacing="0.6 0.6 0.6" 
+    Interpolation="LINEAR" 
+	Optimization="FULL"
+    CompoundingMode="MEAN" 
+	FillHoles="ON" 
+	NumberOfThreads="1"
+	PixelRejectionThreshold="30">
+    <HoleFilling>
+      <HoleFillingElement
+        Type="STICK"     
+        StickLengthLimit="9"
+        NumberOfSticksToUse="1" />
+    </HoleFilling>
+  </VolumeReconstruction>
+
+</PlusConfiguration>
