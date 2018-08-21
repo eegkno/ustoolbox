@@ -17,7 +17,7 @@ click=6.7=py35h10df73f_0
 cloudpickle=0.5.3=py35_0
 clyent=1.2.2=py35h3cd9751_1
 colorama=0.3.9=py35h32a752f_0
-cryptography=2.2.2=py35hfa6e2cd_0
+cryptography=2.3=py35hfa6e2cd_0
 cycler=0.10.0=py35hcc71164_0
 cython=0.28.3=py35hfa6e2cd_0
 dask-core=0.18.1=py35_0
