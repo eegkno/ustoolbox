@@ -6,11 +6,11 @@ from typing import Tuple
 from ustoolbox.utils.command import run_win
 
 def crop_sequence_cmd(file:str=None)-> Tuple[str, str, str]:
-    cmd_1 = 'C:/Users/Edgar/PlusApp-2.6.0.20180120-Win32/bin/EditSequenceFile.exe --operation=CROP'
-    cmd_2 = 'C:/Users/Edgar/PlusApp-2.6.0.20180120-Win32/bin/EditSequenceFile.exe --operation=CROP'
+    cmd_1 = 'C:/Users/Edgar/PlusApp-2.6.0.20180310-Win64/bin/EditSequenceFile.exe --operation=CROP'
+    cmd_2 = 'C:/Users/Edgar/PlusApp-2.6.0.20180310-Win64/bin/EditSequenceFile.exe --operation=CROP'
 
-    roi_1 = ' --rect-origin 217 70  --rect-size 400 361'
-    roi_2 = ' --rect-origin 0 20  --rect-size 182 292'
+    roi_1 = ' --rect-origin 217 75  --rect-size 400 360'
+    roi_2 = ' --rect-origin 0 20  --rect-size 182 290'
 
     input = '--source-seq-file={}'.format(file)
     #print(input)
@@ -33,7 +33,7 @@ def crop_sequence_cmd(file:str=None)-> Tuple[str, str, str]:
 
 def generate_volume_cmd(config_file:str=None, source_file:str=None)->str:
 
-    cmd = 'C:/Users/Edgar/PlusApp-2.6.0.20180120-Win32/bin/VolumeReconstructor.exe'
+    cmd = 'C:/Users/Edgar/PlusApp-2.6.0.20180310-Win64/bin/VolumeReconstructor.exe'
     output = source_file.replace('CROP2', 'VOLUME')
     cmd = '{} --config-file={} --source-seq-file={} --output-volume-file={} --image-to-reference-transform=ImageToReference'.format(cmd, config_file, source_file, output)
 
